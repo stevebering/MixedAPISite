@@ -41,3 +41,8 @@ C:\Users\sbering\documents\visual studio 2012\Projects\MixedAPISite\MixedAPISite
 C:\Users\sbering\documents\visual studio 2012\Projects\MixedAPISite\MixedAPISite.Tests\bin\Debug\Elmah.Mvc.dll
 C:\Users\sbering\documents\visual studio 2012\Projects\MixedAPISite\MixedAPISite.Tests\bin\Debug\Elmah.dll
 C:\Users\sbering\documents\visual studio 2012\Projects\MixedAPISite\MixedAPISite.Tests\bin\Debug\Autofac.Integration.WebApi.dll
+C:\Users\sbering\Documents\Visual Studio 2012\Projects\MixedAPISite\MixedAPISite.Tests\bin\Debug\xunit.dll
+C:\Users\sbering\Documents\Visual Studio 2012\Projects\MixedAPISite\MixedAPISite.Tests\bin\Debug\xunit.xml
+C:\Users\sbering\Documents\Visual Studio 2012\Projects\MixedAPISite\MixedAPISite.Tests\bin\Debug\Moq.dll
+C:\Users\sbering\Documents\Visual Studio 2012\Projects\MixedAPISite\MixedAPISite.Tests\bin\Debug\Moq.pdb
+C:\Users\sbering\Documents\Visual Studio 2012\Projects\MixedAPISite\MixedAPISite.Tests\bin\Debug\Moq.xml
