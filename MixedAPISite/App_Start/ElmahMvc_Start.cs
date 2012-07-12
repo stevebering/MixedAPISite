@@ -1,5 +1,6 @@
 using System.Web.Http;
-using MixedAPISite.Models;
+using MixedAPISite.Infrastructure;
+
 [assembly: WebActivator.PreApplicationStartMethod(typeof(MixedAPISite.App_Start.ElmahMvc), "Start")]
 namespace MixedAPISite.App_Start
 {
