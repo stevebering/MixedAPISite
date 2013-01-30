@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixedAPISite", "MixedAPISite\MixedAPISite.csproj", "{41A2B8C4-4345-40F4-9AF2-EE74372C69A2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixedAPISite.Tests", "MixedAPISite.Tests\MixedAPISite.Tests.csproj", "{447F29B5-8FCD-4C34-8694-92FBB94E9424}"
@@ -22,5 +22,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = 659c1cf9-a7f1-4d14-91c8-c7f318381597
 	EndGlobalSection
 EndGlobal
