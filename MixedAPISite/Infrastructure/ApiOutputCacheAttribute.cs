@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading;
-using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Runtime.Caching;
@@ -11,25 +9,22 @@ using System.Net.Http;
 
 namespace MixedAPISite.Infrastructure
 {
-    public class ApiOutputCacheAttribute<T>
-        : ActionFilterAttribute where T: class
+    public class ApiOutputCacheAttribute
+        : ActionFilterAttribute
     {
         private TimeSpan _timespan;
-        private bool _anonymousOnly;
-        private TimeSpan _clientTimespan;
+        private readonly bool _anonymousOnly;
+        private readonly TimeSpan _clientTimespan;
 
         private string _cacheKey;
         private static readonly ObjectCache WebApiCache = MemoryCache.Default;
 
-        public ApiOutputCacheAttribute(double timespan = 5.0, double clientTimespan = 5.0, bool anonymousOnly = false)
-        {
-            if (timespan <= 0)
-            {
+        public ApiOutputCacheAttribute(double timespan = 5.0, double clientTimespan = 5.0, bool anonymousOnly = false) {
+            if (timespan <= 0) {
                 throw new ArgumentOutOfRangeException("timespan", "Value must be greater than zero.");
             }
 
-            if (clientTimespan <= 0)
-            {
+            if (clientTimespan <= 0) {
                 throw new ArgumentOutOfRangeException("clientTimespan", "Value must be greater than zero.");
             }
 
@@ -39,41 +34,32 @@ namespace MixedAPISite.Infrastructure
             _anonymousOnly = anonymousOnly;
         }
 
-        private bool IsCacheable(HttpActionContext context)
-        {
-            if (_anonymousOnly && Thread.CurrentPrincipal.Identity.IsAuthenticated)
-            {
+        private bool IsCacheable(HttpActionContext context) {
+            if (_anonymousOnly && Thread.CurrentPrincipal.Identity.IsAuthenticated) {
                 return false;
             }
 
-            if (context.Request.Method == System.Net.Http.HttpMethod.Get)
-            {
+            if (context.Request.Method == System.Net.Http.HttpMethod.Get) {
                 return true;
             }
 
             return false;
         }
 
-        private CacheControlHeaderValue SetClientCacheValue()
-        {
-            var cacheControl = new CacheControlHeaderValue();
-            cacheControl.MaxAge = _clientTimespan;
-            cacheControl.MustRevalidate = true;
+        private CacheControlHeaderValue SetClientCacheValue() {
+            var cacheControl = new CacheControlHeaderValue { MaxAge = _clientTimespan, MustRevalidate = true };
 
             return cacheControl;
         }
 
         private Action<HttpActionExecutedContext> Callback { set; get; }
 
-        public override void OnActionExecuting(HttpActionContext actionContext)
-        {
-            if (actionContext == null)
-            {
+        public override void OnActionExecuting(HttpActionContext actionContext) {
+            if (actionContext == null) {
                 throw new ArgumentNullException("actionContext");
             }
 
-            if (!IsCacheable(actionContext))
-            {
+            if (!IsCacheable(actionContext)) {
                 return;
             }
 
@@ -81,25 +67,21 @@ namespace MixedAPISite.Infrastructure
                 actionContext.Request.RequestUri.AbsolutePath,
                 actionContext.Request.Headers.Accept.FirstOrDefault().ToString());
 
-            T cachedValue = WebApiCache.Get(_cacheKey) as T;
-            if (cachedValue != null)
-            {
-                actionContext.Response = actionContext.Request.CreateResponse<T>(System.Net.HttpStatusCode.NotModified, cachedValue);
+            var cachedValue = WebApiCache.Get(_cacheKey);
+            if (cachedValue != null) {
+                actionContext.Response = actionContext.Request.CreateResponse(System.Net.HttpStatusCode.NotModified, cachedValue);
                 actionContext.Response.Content.Headers.ContentType = new MediaTypeHeaderValue(WebApiCache.Get(_cacheKey + "+ContentType").ToString());
                 return;
             }
-            Callback = (actionExecutedContext) =>
-            {
+            Callback = (actionExecutedContext) => {
                 var output = actionExecutedContext.Response.Content.ReadAsStringAsync().Result;
                 WebApiCache.Add(_cacheKey, output, DateTimeOffset.UtcNow.AddSeconds(_timespan.TotalSeconds));
                 WebApiCache.Add(_cacheKey + "+ContentType", actionExecutedContext.Response.Content.Headers.ContentType.MediaType, DateTimeOffset.UtcNow.AddSeconds(_timespan.TotalSeconds));
             };
         }
 
-        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
-        {
-            if (actionExecutedContext == null)
-            {
+        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext) {
+            if (actionExecutedContext == null) {
                 throw new ArgumentNullException("actionExecutedContext");
             }
             Callback(actionExecutedContext);
